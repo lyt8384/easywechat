@@ -16,7 +16,9 @@ use function time;
 
 class Utils
 {
-    public function __construct(protected Application $app) {}
+    public function __construct(protected Application $app)
+    {
+    }
 
     /**
      * @param  array<string>  $jsApiList

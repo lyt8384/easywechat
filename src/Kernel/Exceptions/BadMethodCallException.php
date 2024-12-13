@@ -2,4 +2,6 @@
 
 namespace EasyWeChat\Kernel\Exceptions;
 
-class BadMethodCallException extends Exception {}
+class BadMethodCallException extends Exception
+{
+}

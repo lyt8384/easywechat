@@ -37,4 +37,6 @@ class DecryptXmlMessageTest extends TestCase
     }
 }
 
-class DummyMessage extends Message {}
+class DummyMessage extends Message
+{
+}

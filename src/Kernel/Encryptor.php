@@ -84,6 +84,31 @@ class Encryptor
      */
     public function encrypt(string $plaintext, ?string $nonce = null, int|string|null $timestamp = null): string
     {
+        return $this->encryptAsXml($plaintext, $nonce, $timestamp);
+    }
+
+    /**
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     */
+    public function encryptAsXml(string $plaintext, ?string $nonce = null, int|string|null $timestamp = null): string
+    {
+        $encrypted = $this->encryptAsArray($plaintext, $nonce, $timestamp);
+
+        $response = [
+            'Encrypt' => $encrypted['ciphertext'],
+            'MsgSignature' => $encrypted['signature'],
+            'TimeStamp' => $encrypted['timestamp'],
+            'Nonce' => $encrypted['nonce'],
+        ];
+
+        return Xml::build($response);
+    }
+
+    /**
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     */
+    public function encryptAsArray(string $plaintext, ?string $nonce = null, int|string|null $timestamp = null): array
+    {
         try {
             $plaintext = Pkcs7::padding(random_bytes(16).pack('N', strlen($plaintext)).$plaintext.$this->appId, 32);
             $ciphertext = base64_encode(
@@ -102,14 +127,12 @@ class Encryptor
         $nonce ??= Str::random();
         $timestamp ??= time();
 
-        $response = [
-            'Encrypt' => $ciphertext,
-            'MsgSignature' => $this->createSignature($this->token, $timestamp, $nonce, $ciphertext),
-            'TimeStamp' => $timestamp,
-            'Nonce' => $nonce,
+        return [
+            'ciphertext' => $ciphertext,
+            'signature' => $this->createSignature($this->token, $timestamp, $nonce, $ciphertext),
+            'timestamp' => $timestamp,
+            'nonce' => $nonce,
         ];
-
-        return Xml::build($response);
     }
 
     public function createSignature(mixed ...$attributes): string

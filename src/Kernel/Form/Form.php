@@ -11,7 +11,9 @@ class Form
     /**
      * @param  array<string|array|DataPart>  $fields
      */
-    public function __construct(protected array $fields) {}
+    public function __construct(protected array $fields)
+    {
+    }
 
     /**
      * @param  array<string|array|DataPart>  $fields

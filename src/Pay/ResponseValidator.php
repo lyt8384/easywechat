@@ -11,7 +11,9 @@ use Psr\Http\Message\ResponseInterface as PsrResponse;
 
 class ResponseValidator implements \EasyWeChat\Pay\Contracts\ResponseValidator
 {
-    public function __construct(protected MerchantInterface $merchant) {}
+    public function __construct(protected MerchantInterface $merchant)
+    {
+    }
 
     /**
      * @throws \EasyWeChat\Kernel\Exceptions\BadResponseException

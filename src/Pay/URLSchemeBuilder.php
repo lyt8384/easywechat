@@ -12,7 +12,9 @@ use function sprintf;
 
 class URLSchemeBuilder
 {
-    public function __construct(protected MerchantInterface $merchant) {}
+    public function __construct(protected MerchantInterface $merchant)
+    {
+    }
 
     /**
      * @throws Exception
