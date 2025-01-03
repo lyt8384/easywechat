@@ -68,6 +68,11 @@ class Merchant implements MerchantInterface
         return $this->platformCerts[$serial] ?? null;
     }
 
+    public function getPlatformCerts(): array
+    {
+        return $this->platformCerts;
+    }
+
     /**
      * @param  array<array-key, string|PublicKey>  $platformCerts
      * @return array<string, PublicKey>

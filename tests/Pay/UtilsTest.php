@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace EasyWeChat\Tests\Pay;
 
+use EasyWeChat\Kernel\Support\PrivateKey;
+use EasyWeChat\Kernel\Support\PublicKey;
 use EasyWeChat\Pay\Merchant;
 use EasyWeChat\Pay\Utils;
 use EasyWeChat\Tests\TestCase;
+use EasyWeChat\Pay\Exceptions\EncryptionFailureException;
+use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
 
 class UtilsTest extends TestCase
 {
@@ -51,5 +55,38 @@ class UtilsTest extends TestCase
 
         $params['signType'] = 'HMAC-SHA256';
         $this->assertSame('BAC9240577E86EDC7753264E502196C61F78F24777E9E7CCE82A7BD97F906EED', $utils->createV2Signature($params));
+    }
+
+    public function test_create_ras_encrypt()
+    {
+        $privateKey = new PrivateKey('mock-private-key');
+        $publicKey = \Mockery::mock(PublicKey::class);
+
+        $merchant = new Merchant(
+            mchId: 100001,
+            privateKey: $privateKey,
+            certificate: $publicKey,
+            secretKey: 'v3SecretKey',
+            v2SecretKey: 'v2SecretKey',
+            platformCerts: [
+                'PUB_KEY_ID_123456' => '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlReZ1YnfAohRIfUqIeyP
+aO0PlkMw1RLPdZbEZmldbGrIrOh/0XqSzNZ+mtB6H0eB7TSaoGFtdp/AWy3tb67m
+1T62OrEhz6bnSKMcZkYVmODyxZvcwsCZ3zqCaFo7FrGmh1o9M0/Xfa5SOX4jVGni
+3iM7r7YD/NiW2RCYDtjMoLTmVgrzv45Mzu2XpJqtNbUJIRRhVSnjsAZRC6spWH+b
+QpYIkVd4qmYE0qdpIQBMYOV1w7v1pYn6Z5QdKG4keemADTn4QaZZHrryTcHNYVsZ
+2OZ3aybrevSV3wDGnYGk2nt2xtkdfaNfFn4dGW+p4an5M4fRK+CnYpeTgI6POABk
+pwIDAQAB
+-----END PUBLIC KEY-----'
+            ]
+        );
+         $utils = new Utils(merchant: $merchant);
+         $this->assertIsString($utils->createRasEncrypt('mock-plaintext', 'PUB_KEY_ID_123456'));
+         $this->assertIsString($utils->createRasEncrypt('mock-plaintext'));
+         $this->expectException(InvalidConfigException::class);
+         $utils->createRasEncrypt('mock-plaintext', 'PUB_KEY_ID_456789');
+         $this->expectException(EncryptionFailureException::class);
+         $utils->createRasEncrypt('', 'PUB_KEY_ID_123456');
+         
     }
 }

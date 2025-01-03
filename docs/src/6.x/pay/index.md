@@ -3,8 +3,8 @@
 请仔细阅读并理解：[微信官方文档 - 微信支付](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/index.shtml)
 
 > [!NOTE]
-> 2024年Q3，微信支付官方开启了「平台公钥」平替「平台证书」方案，初始化所需的参数仅需配置上 **平台公钥ID** 及 **平台公钥** 即完全兼容支持，CLI/API下载 **平台证书** 已不是一个必要步骤，可略过。
-> **平台公钥ID** 及 **平台公钥** 均可在 [微信支付商户平台](https://pay.weixin.qq.com/) -> 账户中心 -> API安全 查看及/或下载。
+> 2024 年 Q3，微信支付官方开启了「平台公钥」平替「平台证书」方案，初始化所需的参数仅需配置上 **平台公钥 ID** 及 **平台公钥** 即完全兼容支持，CLI/API 下载 **平台证书** 已不是一个必要步骤，可略过。
+> **平台公钥 ID** 及 **平台公钥** 均可在 [微信支付商户平台](https://pay.weixin.qq.com/) -> 账户中心 -> API 安全 查看及/或下载。
 
 ## 实例化 {#init}
 
@@ -96,6 +96,7 @@ $account->getPrivateKey();
 $account->getCertificate();
 $account->getSecretKey();
 $account->getV2SecretKey();
+$account->getPlatformCert($serial);
 $account->getPlatformCerts();
 ```
 
@@ -119,14 +120,14 @@ $server = $app->getServer();
 $server->handlePaid(function (Message $message, \Closure $next) use ($app) {
     // $message->out_trade_no 获取商户订单号
     // $message->payer['openid'] 获取支付者 openid
-    
+
     try{
         $app->getValidator()->validate($app->getRequest());
        // 验证通过，业务处理
     } catch(Exception $e){
       // 验证失败
     }
- 
+
     return $next($message);
 });
 
@@ -134,7 +135,7 @@ $server->handlePaid(function (Message $message, \Closure $next) use ($app) {
 return $server->serve();
 ```
 
-##### API返回值的签名验证 {#verify-response}
+##### API 返回值的签名验证 {#verify-response}
 
 ```php
 // API 请求示例
@@ -153,4 +154,3 @@ try{
 ```bash
 openssl x509 -in /path/to/merchant/apiclient_cert.pem -noout -serial | awk -F= '{print $2}'
 ```
-
