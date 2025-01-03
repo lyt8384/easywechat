@@ -171,7 +171,7 @@ class Utils
         $platformCerts = $this->merchant->getPlatformCerts();
         $platformCert = $serial ? $this->merchant->getPlatformCert($serial) : reset($platformCerts);
         if (empty($platformCert)) {
-            throw new InvalidConfigException('Missing platform certficate.');
+            throw new InvalidConfigException('Missing platform certificate.');
         }
 
         if (!openssl_public_encrypt($plaintext, $encrypted, $platformCert, OPENSSL_PKCS1_OAEP_PADDING)) {
