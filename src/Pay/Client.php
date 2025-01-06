@@ -145,6 +145,11 @@ class Client implements HttpClientInterface
         if (! empty($this->prependHeaders)) {
             $options['headers'] = array_merge($this->prependHeaders, $options['headers']);
         }
+        
+        //如果有加密字段，需要携带
+        if(! isset($options['headers']['Wechatpay-Serial']) && $serial = $this->merchant->getPlatformCertSerial()){
+            $options['headers']['Wechatpay-Serial'] = $serial;
+        }
 
         return new Response(
             $this->client->request($method, $url, $options),
