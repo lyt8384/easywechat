@@ -168,10 +168,8 @@ class Utils
      */
     public function createRsaEncrypt(string $plaintext, ?string $serial = null): string
     {
-        $serial = $serial ?? $this->merchant->getPlatformCertSerial();
         $platformCerts = $this->merchant->getPlatformCerts();
         $platformCert = $serial ? $this->merchant->getPlatformCert($serial) : reset($platformCerts);
-
         if (empty($platformCert)) {
             throw new InvalidConfigException('Missing platform certificate.');
         }
@@ -179,8 +177,6 @@ class Utils
         if (!openssl_public_encrypt($plaintext, $encrypted, $platformCert, OPENSSL_PKCS1_OAEP_PADDING)) {
             throw new EncryptionFailureException('Encrypt failed.');
         }
-        
-        $this->merchant->setPlatformCertSerial($serial ?? key($platformCerts));
 
         return base64_encode($encrypted);
     }

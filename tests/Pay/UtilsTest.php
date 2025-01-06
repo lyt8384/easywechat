@@ -81,18 +81,12 @@ pwIDAQAB
             ]
         );
          $utils = new Utils(merchant: $merchant);
-         $this->assertSame(null,$merchant->getPlatformCertSerial());
          $this->assertIsString($utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_123456'));
-         $this->assertSame('PUB_KEY_ID_123456',$merchant->getPlatformCertSerial());
-
          $this->assertIsString($utils->createRsaEncrypt('mock-plaintext'));
-         $this->assertSame('PUB_KEY_ID_123456',$merchant->getPlatformCertSerial());
-
          $this->expectException(InvalidConfigException::class);
          $utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_456789');
-
-        $this->expectException(EncryptionFailureException::class);
-        $utils->createRsaEncrypt(str_repeat('A', 256), 'PUB_KEY_ID_123456');
-
+         $this->expectException(EncryptionFailureException::class);
+         $utils->createRsaEncrypt('', 'PUB_KEY_ID_123456');
+         
     }
 }

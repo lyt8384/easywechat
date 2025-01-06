@@ -22,11 +22,6 @@ class Merchant implements MerchantInterface
     protected array $platformCerts = [];
 
     /**
-     * @var string|null
-     */
-    protected ?string $platCertSerial = null;
-
-    /**
      * @param  array<int|string, string|PublicKey>  $platformCerts
      *
      * @throws InvalidArgumentException
@@ -68,11 +63,6 @@ class Merchant implements MerchantInterface
         return $this->v2SecretKey;
     }
 
-    public function getPlatformCertSerial(): ?string
-    {
-        return $this->platCertSerial;
-    }
-
     public function getPlatformCert(string $serial): ?PublicKey
     {
         return $this->platformCerts[$serial] ?? null;
@@ -107,12 +97,5 @@ class Merchant implements MerchantInterface
         }
 
         return $certs;
-    }
-
-    public function setPlatformCertSerial(string $serial): static
-    {
-         $this->platCertSerial = $serial;
-
-        return $this;
     }
 }
