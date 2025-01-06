@@ -155,4 +155,16 @@ class ClientTest extends TestCase
 
         $this->assertSame($response, $client->uploadMedia('/v3/merchant/media/upload', './tests/fixtures/files/image.jpg'));
     }
+
+    public function test_v3_with_serial_header()
+    {
+        $client = Client::mock();
+        $client->shouldReceive('createSignature')->never();
+        $client->shouldReceive('attachLegacySignature')->with([
+            'foo' => 'bar',
+        ])->andReturn(['foo' => 'bar', 'sign' => 'mock-signature']);
+
+        $client->withSerialHeader()->post('certificates', ['body' => Xml::build(['foo' => 'bar'])]);
+        $this->assertSame('Wechatpay-Serial: PUB_KEY_ID_MOCK', $client->getRequestOptions()['headers'][0]);
+    }
 }

@@ -69,7 +69,7 @@ class UtilsTest extends TestCase
             secretKey: 'v3SecretKey',
             v2SecretKey: 'v2SecretKey',
             platformCerts: [
-                'PUB_KEY_ID_123456' => '-----BEGIN PUBLIC KEY-----
+                'PUB_KEY_ID_MOCK' => '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlReZ1YnfAohRIfUqIeyP
 aO0PlkMw1RLPdZbEZmldbGrIrOh/0XqSzNZ+mtB6H0eB7TSaoGFtdp/AWy3tb67m
 1T62OrEhz6bnSKMcZkYVmODyxZvcwsCZ3zqCaFo7FrGmh1o9M0/Xfa5SOX4jVGni
@@ -81,12 +81,14 @@ pwIDAQAB
             ]
         );
          $utils = new Utils(merchant: $merchant);
-         $this->assertIsString($utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_123456'));
+         $this->assertIsString($utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_MOCK'));
          $this->assertIsString($utils->createRsaEncrypt('mock-plaintext'));
+         
          $this->expectException(InvalidConfigException::class);
-         $utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_456789');
+         $utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_OTHER');
+
          $this->expectException(EncryptionFailureException::class);
-         $utils->createRsaEncrypt('', 'PUB_KEY_ID_123456');
+         $utils->createRsaEncrypt('', 'PUB_KEY_ID_MOCK');
          
     }
 }

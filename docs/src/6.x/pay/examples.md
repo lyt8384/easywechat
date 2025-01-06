@@ -2,8 +2,6 @@
 
 > 👏🏻 欢迎点击本页下方 "帮助我们改善此页面！" 链接参与贡献更多的使用示例！
 
-
-
 <details>
     <summary>JSAPI 下单</summary>
 
@@ -30,7 +28,6 @@ $response = $app->getClient()->postJson("v3/pay/transactions/jsapi", [
 
 </details>
 
-
 <details>
     <summary>Native 下单</summary>
 
@@ -49,8 +46,8 @@ $response = $app->getClient()->postJson('v3/pay/transactions/native', [
 
 print_r($response->toArray(false));
 ```
-</details>
 
+</details>
 
 <details>
     <summary>查询订单（商户订单号）</summary>
@@ -66,8 +63,8 @@ $response = $app->getClient()->get("v3/pay/transactions/out-trade-no/{$outTradeN
 
 print_r($response->toArray());
 ```
-</details>
 
+</details>
 
 <details>
     <summary>查询订单（微信订单号）</summary>
@@ -82,6 +79,7 @@ $response = $app->getClient()->get("pay/transactions/id/{$transactionId}", [
 
 print_r($response->toArray());
 ```
+
 </details>
 
 <details>
@@ -118,6 +116,7 @@ Route::post('payment_notify', function () {
     return $server->serve();
 });
 ```
+
 </details>
   
 <details>
@@ -141,13 +140,13 @@ $response = $api->post('/mmpaymkttransfers/promotion/transfers', [
 
 print_r($response->toArray());
 ```
-</details>
 
+</details>
 
 <details>
    <summary>JSAPI下单（服务商）</summary>
 
-   > 官方文档：<[https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_1.shtml](https://pay.weixin.qq.com/docs/partner/apis/partner-jsapi-payment/partner-jsons/partner-jsapi-prepay.html)>
+> 官方文档：<[https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_1.shtml](https://pay.weixin.qq.com/docs/partner/apis/partner-jsapi-payment/partner-jsons/partner-jsapi-prepay.html)>
 
 ```php
  $response = $app->getClient()->postJson("v3/pay/partner/transactions/jsapi", [
@@ -170,6 +169,45 @@ print_r($response->toArray());
 
 print_r($response->toArray());
 ```
+
+</details>
+
+<details>
+    <summary>敏感信息加密</summary>
+
+> 官方文档：<https://pay.weixin.qq.com/doc/v3/merchant/4013053257>
+> 使用默认公钥 ID
+
+```php
+$utils = $app->getUtils();
+$response = $app->getClient()->withSerialHeader()->postJson("v3/applyment4sub/applyment/", [
+   "business_code" => "12345678",
+   'contact_info'  => [
+        'contact_name'      => $utils->createRsaEncrypt('张三'),
+        //...
+    ],
+    //...
+]);
+
+print_r($response->toArray());
+```
+
+或指定公钥 ID
+
+```php
+$utils = $app->getUtils();
+$response = $app->getClient()->withSerialHeader("PUB_KEY_ID_123456")->postJson("v3/applyment4sub/applyment/", [
+   "business_code" => "12345678",
+   'contact_info'  => [
+        'contact_name'      => $utils->createRsaEncrypt("张三","PUB_KEY_ID_123456"),
+        //...
+    ],
+    //...
+]);
+
+print_r($response->toArray());
+```
+
 </details>
   
 <!--

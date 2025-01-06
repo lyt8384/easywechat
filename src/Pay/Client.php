@@ -166,6 +166,18 @@ class Client implements HttpClientInterface
         return false;
     }
 
+    public function withSerialHeader(?string $serial = null)
+    {
+        $platformCerts = $this->merchant->getPlatformCerts();
+        if (empty($platformCerts)) {
+            throw new InvalidConfigException('Missing platform certificate.');
+        }
+        
+        $serial = $serial ?? array_key_first($platformCerts);
+        $this->withHeader('Wechatpay-Serial', $serial);
+        return $this;
+    }
+
     /**
      * @param  array<int, mixed>  $arguments
      *
@@ -242,6 +254,17 @@ class Client implements HttpClientInterface
             Mockery::mock(PublicKey::class),
             'mock-v3-key',
             'mock-v2-key',
+            [
+                'PUB_KEY_ID_MOCK' => '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlReZ1YnfAohRIfUqIeyP
+aO0PlkMw1RLPdZbEZmldbGrIrOh/0XqSzNZ+mtB6H0eB7TSaoGFtdp/AWy3tb67m
+1T62OrEhz6bnSKMcZkYVmODyxZvcwsCZ3zqCaFo7FrGmh1o9M0/Xfa5SOX4jVGni
+3iM7r7YD/NiW2RCYDtjMoLTmVgrzv45Mzu2XpJqtNbUJIRRhVSnjsAZRC6spWH+b
+QpYIkVd4qmYE0qdpIQBMYOV1w7v1pYn6Z5QdKG4keemADTn4QaZZHrryTcHNYVsZ
+2OZ3aybrevSV3wDGnYGk2nt2xtkdfaNfFn4dGW+p4an5M4fRK+CnYpeTgI6POABk
+pwIDAQAB
+-----END PUBLIC KEY-----'
+            ]
         );
 
         return Mockery::mock(static::class, [$mockMerchant, $mockHttpClient])
