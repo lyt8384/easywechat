@@ -83,12 +83,12 @@ pwIDAQAB
          $utils = new Utils(merchant: $merchant);
          $this->assertIsString($utils->encryptWithRsaPublicKey('mock-plaintext', 'PUB_KEY_ID_MOCK'));
          $this->assertIsString($utils->encryptWithRsaPublicKey('mock-plaintext'));
-         
+
          $this->expectException(InvalidConfigException::class);
-         $utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_OTHER');
+         $utils->encryptWithRsaPublicKey('mock-plaintext', 'PUB_KEY_ID_OTHER');
 
          $this->expectException(EncryptionFailureException::class);
-         $utils->createRsaEncrypt('', 'PUB_KEY_ID_MOCK');
-         
+         $utils->encryptWithRsaPublicKey('', 'PUB_KEY_ID_MOCK');
+
     }
 }
