@@ -166,10 +166,11 @@ class Utils
      *
      * @return string The base64-encoded encrypted text.
      */
-    public function createRsaEncrypt(string $plaintext, ?string $serial = null): string
+    public function encryptWithRsaPublicKey(string $plaintext, ?string $serial = null): string
     {
         $platformCerts = $this->merchant->getPlatformCerts();
-        $platformCert = $serial ? $this->merchant->getPlatformCert($serial) : reset($platformCerts);
+        $platformCert = $serial ? $this->merchant->getPlatformCert($serial) : array_key_first($platformCerts);
+        
         if (empty($platformCert)) {
             throw new InvalidConfigException('Missing platform certificate.');
         }
