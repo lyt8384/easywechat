@@ -169,8 +169,9 @@ class Utils
     public function encryptWithRsaPublicKey(string $plaintext, ?string $serial = null): string
     {
         $platformCerts = $this->merchant->getPlatformCerts();
-        $platformCert = $serial ? $this->merchant->getPlatformCert($serial) : array_key_first($platformCerts);
-        
+        $serial ??= array_key_first($platformCerts);
+        $platformCert = $this->merchant->getPlatformCert($serial);
+
         if (empty($platformCert)) {
             throw new InvalidConfigException('Missing platform certificate.');
         }
