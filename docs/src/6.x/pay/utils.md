@@ -130,8 +130,8 @@ $config = [
        // "{$pubKeyId}" => '/path/to/wechatpay/pubkey.pem',
    ],
 ];
-//使用微信支付公钥加密敏感字段可传入$serial，或不传默认取第一个证书
-$encrypted = $utils->createRsaEncrypt($plaintext, $serial); // 返回加密后数据
+//使用微信支付公钥加密敏感字段可传入$serial(即 $pubKeyId)，或不传默认取第一个证书
+$encrypted = $utils->encryptWithRsaPublicKey($plaintext, $serial); // 返回加密后数据
 ```
 
 调用示例：[官方文档 - 如何使用微信支付公钥加密敏感字段](https://pay.weixin.qq.com/doc/v3/merchant/4013053257)
