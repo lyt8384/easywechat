@@ -57,7 +57,7 @@ class UtilsTest extends TestCase
         $this->assertSame('BAC9240577E86EDC7753264E502196C61F78F24777E9E7CCE82A7BD97F906EED', $utils->createV2Signature($params));
     }
 
-    public function test_create_rsa_encrypt()
+    public function test_encrypt_with_rsa_public_key()
     {
         $privateKey = new PrivateKey('mock-private-key');
         $publicKey = \Mockery::mock(PublicKey::class);
@@ -81,8 +81,8 @@ pwIDAQAB
             ]
         );
          $utils = new Utils(merchant: $merchant);
-         $this->assertIsString($utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_MOCK'));
-         $this->assertIsString($utils->createRsaEncrypt('mock-plaintext'));
+         $this->assertIsString($utils->encryptWithRsaPublicKey('mock-plaintext', 'PUB_KEY_ID_MOCK'));
+         $this->assertIsString($utils->encryptWithRsaPublicKey('mock-plaintext'));
          
          $this->expectException(InvalidConfigException::class);
          $utils->createRsaEncrypt('mock-plaintext', 'PUB_KEY_ID_OTHER');
